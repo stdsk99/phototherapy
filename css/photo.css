@@ -1,0 +1,173 @@
+/* ===== ภาพเครื่องส่องไฟ LED จำลอง (js/dia.js) ===== */
+:root{--ph-body:#fbfaf7;--ph-panel:#eef3f2;--ph-blue:#2f7df6;--ph-led:#4f9bff;--ph-indigo:#3b5bdb;--ph-skin:#f3cfb3}
+@media (prefers-color-scheme: dark){:root{--ph-body:#20262f;--ph-panel:#27303a;--ph-blue:#5c9bff;--ph-led:#7db4ff;--ph-indigo:#6f8cff;--ph-skin:#c99f82}}
+.logo.ph-logo{background:var(--ph-indigo)}
+svg.ph{--lvl:1}
+.ph-col,.ph-armh{fill:var(--ph-panel);stroke:currentColor;stroke-width:1.2}
+.ph-knob{fill:var(--ink);opacity:.6}
+.ph-base{fill:currentColor;opacity:.7}.ph-wheel{fill:var(--card);stroke:currentColor;stroke-width:1.5}
+.ph-legs{fill:var(--ph-panel);stroke:currentColor;stroke-width:1}
+.ph-headg{transition:transform .9s ease}
+.ph-head{fill:var(--ph-body);stroke:currentColor;stroke-width:1.6}
+.ph-sink line{stroke:currentColor;stroke-width:2;opacity:.45}
+.ph-brd{fill:#1f6f52;opacity:.85}
+.ph-fbox{fill:var(--ph-panel);stroke:currentColor;stroke-width:1.2}
+.ph-fan path{stroke:currentColor;stroke-width:2.4;stroke-linecap:round}
+.ph-fan{transform-box:fill-box;transform-origin:center;animation:phspin .5s linear infinite}
+svg.ph.fanstop .ph-fan{animation:none}
+.ph-pcb{fill:#26313d}
+.ph-led{fill:var(--ph-led);opacity:calc(.25 + var(--lvl)*.75);filter:drop-shadow(0 0 3px var(--ph-led));transition:opacity .9s}
+svg.ph.off .ph-led{fill:#5d6675;opacity:.4;filter:none}
+svg.ph.dark .ph-led.mid{fill:#5d6675;opacity:.45;filter:none}
+.ph-cov{fill:rgba(200,225,255,.55);stroke:currentColor;stroke-width:1}
+.ph-dirt{display:none}
+svg.ph.dirty .ph-cov{fill:#d9c98c;opacity:.9}
+svg.ph.dirty .ph-dirt{display:inline;fill:#7a6a3a;opacity:.8}
+.ph-cloth{display:none;fill:#e9d9c0;stroke:currentColor;stroke-width:1;opacity:.95}
+svg.ph.cloth .ph-cloth{display:inline}
+.ph-cone{opacity:var(--lvl);transition:opacity .9s}
+.ph-band{fill:var(--card);opacity:0;transition:opacity .9s}
+svg.ph.dark .ph-band{opacity:.55}
+svg.ph.off .ph-cone{opacity:0}
+svg.ph.off .ph-band{opacity:0}
+.ph-crib{fill:rgba(160,200,230,.12);stroke:currentColor;stroke-width:1.2;stroke-dasharray:3 2}
+.ph-matt{fill:#cfe6ef;stroke:currentColor;stroke-width:1}
+.ph-baby ellipse{fill:var(--ph-skin);stroke:currentColor;stroke-width:1}
+.ph-baby path{fill:none;stroke:currentColor;stroke-width:3;stroke-linecap:round;opacity:.55}
+.ph-mask{fill:#1d2430}.ph-nap{fill:#ffffff;stroke:currentColor;stroke-width:.8}
+svg.ph.nobaby .ph-baby{display:none}
+.ph-mbody{fill:#f2c94c;stroke:currentColor;stroke-width:1.2}
+.ph-mscr{fill:#14303a}
+.ph-mv{font-size:9px;font-weight:700;fill:#8fe3c4;font-family:ui-monospace,monospace}
+.ph-mu{font-size:5.5px;fill:#3b3320}
+.ph-pbox{fill:var(--ph-body);stroke:currentColor;stroke-width:1.4}
+.ph-scr{fill:#14303a;stroke:currentColor;stroke-width:1}
+svg.ph.off .ph-scr{fill:#0c1418}
+.ph-mode{font-size:9px;font-weight:700;fill:#8fc8ff;font-family:ui-monospace,monospace}
+.ph-k{font-size:7px;fill:#9fb6bf;font-family:ui-monospace,monospace}
+.ph-hrs{font-size:8px;font-weight:600;fill:#ffd37a;font-family:ui-monospace,monospace}
+.ph-alm{font-size:7px;font-weight:700;fill:#ff8a8a}
+svg.ph.alarm .ph-alm{animation:blink .8s steps(1) infinite}
+.ph-ind{fill:#5d6675;opacity:.35;stroke:currentColor;stroke-width:.5}
+svg.ph:not(.off) .ph-ind.g{fill:#2fbf71;opacity:1}
+svg.ph.alarm .ph-ind.r, svg.ph.hot .ph-ind.r{fill:#e5484d;opacity:1;animation:blink .8s steps(1) infinite}
+.ph-dial{fill:var(--card);stroke:currentColor;stroke-width:1.3}.ph-dialm{stroke:currentColor;stroke-width:2;stroke-linecap:round}
+.ph-cab{fill:var(--ph-panel);stroke:currentColor;stroke-width:1.3}
+.ph-psu{fill:var(--ink);opacity:.8}
+.ph-fuse{fill:var(--card);stroke:currentColor;stroke-width:1.1}
+.ph-cord{fill:none;stroke:var(--ink);stroke-width:2.4}
+svg.ph.hot .ph-head{stroke:var(--warn);stroke-width:2.2}
+svg.ph.off{opacity:.88}
+svg.ph .part.hl .hit{stroke:var(--hi);stroke-width:3;stroke-dasharray:none;fill:var(--hi-soft);fill-opacity:.4;animation:hlp 1.2s ease-in-out infinite}
+@keyframes phspin{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion: reduce){svg.ph *{animation:none!important;transition:none!important}}
+
+/* โหมดเรียนรู้ / โหมดสอบ */
+.lpbox svg.sx{max-height:none}
+.lpbox.mini svg.sx{max-height:260px}
+.sx-mm{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0 0}
+.sx-mm span{font-size:12px;border:1px solid var(--line);border-radius:999px;padding:2px 10px;background:var(--card)}
+
+/* ภาพขยาย */
+.zm{width:100%;max-width:320px;height:auto;display:block;color:var(--ink)}
+.zm .zm-t{font-size:10px;fill:currentColor}
+.zm .zm-bad{fill:var(--warn)}
+.zm .zm-o{fill:none;stroke:currentColor;stroke-width:1.5}
+.zm .zm-f{fill:var(--card);stroke:currentColor;stroke-width:1.4}
+.zm .zm-wet{fill:var(--warn);opacity:.6}
+.zm .zm-dirt{fill:#6b5a3a;opacity:.75}
+.zm .zm-cr{fill:none;stroke:var(--warn);stroke-width:2;stroke-linecap:round}
+.zm .zm-ok{fill:none;stroke:var(--accent);stroke-width:2}
+.zm .zm-g{fill:#2fbf71}
+.zm.fixed .zm-bad,.zm.fixed .zm-cr,.zm.fixed .zm-wet,.zm.fixed .zm-dirt{display:none}
+.zm:not(.fixed) .zm-new{display:none}
+.zm.fixed .zm-old{display:none}
+
+/* แท็บย่อยในหน้าโมดูล */
+.subtabs{margin:6px 0 14px}
+.sfx{display:grid;gap:10px;margin:10px 0}
+.sfx .sfrow{border:1px solid var(--line);border-radius:12px;padding:10px 14px;background:var(--card)}
+.sfx .sfrow b{display:block}
+.sxset{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px;align-items:start}
+.sxset .ctrl{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0}
+.sxset .ctrl button{min-width:52px}
+.sxset .read{font-family:ui-monospace,monospace;font-size:15px;padding:6px 10px;border-radius:8px;background:var(--accent-soft);display:inline-block}
+@media (max-width:760px){.sxset{grid-template-columns:1fr}}
+.sx-cap{min-height:22px;margin-top:4px;text-align:center}
+.sx-cap span{display:inline-block;font-size:13px;background:var(--mid-soft);color:var(--ink);border-radius:999px;padding:2px 12px}
+.lpbox svg.sx.dia{max-height:none}
+
+/* ===== จากวิชาตู้อบ: บทเรียน ใบสั่ง ตรวจก่อนใช้ มุมช่าง (js/tech.js) ===== */
+.kicker{font-size:12px;font-weight:600;color:var(--accent);letter-spacing:.03em}
+.clgrid{display:grid;gap:16px}
+@media (min-width:900px){ .clgrid{grid-template-columns:240px minmax(0,1fr);align-items:start} .clnav{position:sticky;top:112px} }
+.clnav{display:flex;flex-direction:column;gap:6px}
+@media (max-width:899px){ .clgrid{grid-template-columns:minmax(0,1fr)} .clnav{flex-direction:row;overflow-x:auto;padding-bottom:4px;min-width:0;max-width:100%} .clnav button{flex:none} }
+.clnav button{justify-content:flex-start;text-align:left;border-radius:10px}
+.clnav button.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.lesson{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 20px;min-width:0}
+.lesson h2{margin-top:0}.lesson h3{margin:22px 0 4px}
+.lesson ul,.lesson ol{padding-left:22px}.lesson li{margin:4px 0}
+.exbox{background:var(--low-soft);border-radius:10px;padding:10px 14px;margin:10px 0;font-size:14px}
+.simtop{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin:6px 0 10px}
+.simdots{display:flex;gap:6px}.simdots i{width:12px;height:12px;border-radius:50%;background:var(--line)}
+.simdots i.on{background:var(--ink)}.simdots i.ok{background:var(--accent)}.simdots i.bad{background:var(--warn)}
+.order{background:var(--card);border:1px solid var(--line);border-left:4px solid var(--mid);border-radius:12px;padding:10px 14px;margin-bottom:12px}
+.order p{margin:4px 0 0;font-size:15px}
+ul.gl{list-style:none;padding:0}ul.gl li{padding:6px 10px;border-radius:8px;margin:4px 0;font-weight:600}
+ul.gl li.ok{background:var(--accent-soft);color:var(--accent)}ul.gl li.bad{background:var(--warn-soft);color:var(--warn)}
+.bad-t{color:var(--warn);font-weight:600}
+.tstat{display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:8px 12px;margin:0 0 10px;font-size:14px}
+.tp{border:1px solid var(--line);border-radius:999px;padding:2px 10px;font-size:13px}
+.tp.ok{background:var(--accent-soft);color:var(--accent);border-color:transparent;font-weight:600}
+.chk{display:grid;gap:8px;margin:12px 0}
+.chkrow{display:flex;justify-content:space-between;align-items:center;gap:12px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 14px}
+.chkrow p{margin:2px 0 0;font-size:14px}
+.chkrow .act{color:var(--mid);font-weight:600}
+.chkrow.good{border-color:var(--accent);background:var(--accent-soft)}
+.chkrow.bad{border-color:var(--warn);background:var(--warn-soft)}
+.chkrow .seg{flex:none}
+.chkrow .seg button.on{background:var(--ink);color:var(--bg)}
+@media (max-width:560px){ .chkrow{flex-direction:column;align-items:stretch} .chkrow .seg{align-self:flex-end} }
+.imsg{min-height:20px;margin-top:8px;font-size:13px;color:var(--mid)}
+
+/* ===== โมดูล 1: เครื่องจำลองฟิสิกส์ (js/physics.js) ===== */
+.phsim{border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin:14px 0;background:var(--card)}
+.phsim h3{margin:0 0 8px}
+.sp{width:100%;max-width:560px;height:auto;display:block;color:var(--ink)}
+.sp-band{fill:var(--ph-blue);opacity:.10}
+.sp-bt{font-size:8px;fill:var(--ph-indigo);font-weight:600}
+.sp-ab{fill:none;stroke:#c9a400;stroke-width:2;stroke-dasharray:5 3}
+.sp-abf{fill:#f2c94c;opacity:.35}
+.sp-em{fill:none;stroke:var(--ink);stroke-width:1.8}
+.sp-eff{fill:var(--ph-blue);opacity:.45}
+.sp-ax,.sp-tk{stroke:currentColor;stroke-width:1}
+.sp-tx{font-size:8px;fill:var(--muted)}
+.sp-uv{font-size:8px;fill:var(--warn);font-weight:700}
+.sp-lg{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;margin:6px 0 10px}
+.sp-lg i{display:inline-block;width:18px;height:8px;border-radius:3px;margin-right:6px;vertical-align:middle}
+.lg-ab{border-top:2px dashed #c9a400;height:0!important}.lg-em{border-top:2px solid var(--ink);height:0!important}.lg-eff{background:var(--ph-blue);opacity:.5}
+.iso{width:100%;max-width:520px;height:auto;display:block;color:var(--ink)}
+.iso path,.iso circle{fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+.iso .iso-hb{stroke-dasharray:3 3;stroke-width:1.4;opacity:.7}
+.iso .iso-ph{stroke:var(--ph-blue);opacity:0;transition:opacity .6s,transform 1.4s ease;transform:translate(0,0)}
+.iso .iso-pd{fill:var(--ph-blue);stroke:none;opacity:0;transition:opacity .6s,transform 1.4s ease}
+.iso.s1 .iso-ph,.iso.s1 .iso-pd{opacity:1;transform:translate(40px,46px)}
+.iso.s2 .iso-ph,.iso.s2 .iso-pd{opacity:0}
+.iso.s2 .iso-m1 path:first-child{stroke:var(--ph-blue)}
+.iso .iso-m2,.iso .iso-l2,.iso .iso-out{opacity:0;transition:opacity .8s}
+.iso.s3 .iso-m1,.iso.s3 .iso-l1{opacity:0;transition:opacity .8s}
+.iso.s3 .iso-m2,.iso.s3 .iso-l2{opacity:1}
+.iso.s4 .iso-out{opacity:1}
+.iso text{font-size:10px;fill:currentColor;stroke:none}
+.iso .iso-tx{font-size:9px}
+.iso .iso-ar{stroke:var(--accent)}
+.phread{border:1px solid var(--line);border-radius:10px;padding:8px 12px;margin:10px 0;background:var(--bg)}
+.phread.ok{border-color:var(--accent)}.phread.bad{border-color:var(--warn)}
+.phr-n{font-size:12px;color:var(--muted)}.phr-v{font-size:20px;font-weight:700;font-family:ui-monospace,monospace}
+.phdist{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:14px;align-items:start}
+.phdist input[type=range]{width:100%}
+@media (max-width:720px){.phdist{grid-template-columns:minmax(0,1fr)}}
+@media (prefers-reduced-motion: reduce){.iso *{transition:none!important}}
+.pmgrid>*{min-width:0} .cgrid label{min-width:0} .cgrid input{max-width:100%;box-sizing:border-box}
+table.lim{width:100%;table-layout:fixed} table.lim td{white-space:normal;overflow-wrap:anywhere}

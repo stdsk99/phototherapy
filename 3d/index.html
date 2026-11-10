@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>เครื่องส่องไฟรักษาทารกตัวเหลือง 3 มิติ</title>
+<script>
+/* ต้องเข้าสู่ระบบที่เว็บหลักก่อน (เหมือนแอปหลัก) */
+(function(){
+  if(/[?&]preview\b/.test(location.search)) return;   // โหมดดูตัวอย่าง: ไม่ต้องเข้าสู่ระบบ
+  var s=null; try{ s=JSON.parse(localStorage.getItem("mtc-session")||"null"); }catch(e){}
+  if(!s || !s.tk){ location.replace("/medtechcenter/course.html?c=photo"); }
+})();
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css?v=1">
+<style>.logo{background:#3b5bdb}</style>
+<script type="importmap">{"imports":{"three":"./lib/three.module.min.js"}}</script>
+</head>
+<body>
+<header class="top">
+  <div class="logo">3D</div>
+  <div class="ttl">
+    <h1>เครื่องส่องไฟรักษาทารกตัวเหลือง 3 มิติ</h1>
+    <p>ลากเพื่อหมุน · หมุนล้อเมาส์หรือถ่างนิ้วเพื่อซูม · แตะชิ้นส่วนเพื่อดูคำอธิบายและสั่งให้ขยับ</p>
+  </div>
+  <a class="back" id="back" href="../#overview">← กลับโมดูล 1</a>
+</header>
+
+<main class="main">
+  <section class="stage" id="stage">
+    <div class="hint">แตะชิ้นส่วนเพื่อเลือก · เครื่องจำลองทั่วไป ไม่ใช่รุ่นของผู้ผลิตรายใด</div>
+    <div class="toast" id="toast" hidden></div>
+    <div class="loading" id="loading">กำลังโหลดภาพ 3 มิติ…</div>
+    <div class="bar">
+      <div class="row">
+        <div class="seg" id="views">
+          <button data-v="iso" class="on">มุมเฉียง</button><button data-v="front">ด้านหน้า</button><button data-v="side">ด้านข้าง</button><button data-v="top">ด้านบน</button>
+        </div>
+        <button id="b-task">🎯 โหมดฝึก</button>
+        <button id="b-lbl" class="on">ป้ายชื่อ</button>
+        <button id="b-cover">ฝาครอบ: ปกติ</button>
+        <button id="b-air">▶ เปิดไฟ</button>
+        <button id="b-fill">ระยะ 30 cm</button>
+      </div>
+      <div class="row">
+        <label class="ex">แยกชิ้นส่วน <input type="range" id="explode" min="0" max="100" value="0"></label>
+        <button id="b-reset">↺ ประกอบกลับ</button>
+      </div>
+    </div>
+  </section>
+  <aside class="side" id="sidewrap"><div class="task" id="task" hidden></div><div id="side"></div></aside>
+</main>
+
+<script src="../data/parts.js"></script>
+<script src="../data/config.js"></script>
+<script src="../js/score.js"></script>
+<script src="data.js?v=1"></script>
+<script src="task.js?v=1"></script>
+<script type="module" src="main.js?v=1"></script>
+</body>
+</html>
