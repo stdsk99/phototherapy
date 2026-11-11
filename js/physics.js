@@ -123,7 +123,7 @@
     const L=D.lessons.find(x=>x.id===cur), i=D.lessons.indexOf(L);
     root.innerHTML=`<h1>${esc(D.title)}</h1><p class="muted">${esc(D.intro)}</p>
       <div class="clgrid">
-      <nav class="clnav">${D.lessons.map(x=>`<button data-l="${x.id}" class="${x.id===cur?"on":""}">${esc(x.n)}</button>`).join("")}</nav>
+      <nav class="clnav">${D.lessons.map(x=>`<button data-l="${x.id}" data-seen="overview|${x.id}" class="${x.id===cur?"on":""}">${esc(x.n)}</button>`).join("")}</nav>
       <article class="lesson"><h2>${esc(L.n)}</h2>${L.b.map(block).join("")}<div id="ph-sim"></div>
         <div class="tools">${i>0?`<button data-go="${D.lessons[i-1].id}">◀ ${esc(D.lessons[i-1].n)}</button>`:""}
         ${i<D.lessons.length-1?`<button class="primary" data-go="${D.lessons[i+1].id}">${esc(D.lessons[i+1].n)} ▶</button>`:""}</div>
@@ -131,6 +131,7 @@
         <a class="ov-3d" href="3d/">ดูเครื่องแบบ 3 มิติ<small>หมุน แยกชิ้นส่วน และดูแสงตกบนเตียง</small><span aria-hidden="true">→</span></a>
         <p class="muted small">อ่านครบแล้ว ทำสอบท้ายโมดูลด้านล่าง</p>`:""}
       </article></div>`;
+    if(window.Seen) Seen.mark("overview", cur, root);
     if(L.sim && SIMS[L.sim]) SIMS[L.sim](root.querySelector("#ph-sim"));
     root.querySelectorAll("[data-l],[data-go]").forEach(b=>b.onclick=()=>{ cur=b.dataset.l||b.dataset.go; render(); if(window.innerWidth<900) root.querySelector(".lesson").scrollIntoView({behavior:"smooth"}); });
   }

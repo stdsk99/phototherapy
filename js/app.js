@@ -19,10 +19,11 @@ ptRun.onclick=()=>{ ptOn=!ptOn; ptRun.classList.toggle("on",ptOn); ptRun.textCon
 /* ---------- โมดูล 2: แผงชิ้นส่วน ---------- */
 const panel=document.getElementById("panel");
 const chips=document.getElementById("chips");
-Object.entries(P).forEach(([id,o])=>{const b=document.createElement("button");b.textContent=o.th;b.onclick=()=>select(id,true);chips.append(b);});
+Object.entries(P).forEach(([id,o])=>{const b=document.createElement("button");b.textContent=o.th;b.dataset.seen="parts|"+id;b.onclick=()=>select(id,true);chips.append(b);});
 const chipHTML=chips.outerHTML;
 let selected=null;
 function select(id,scroll){
+  if(window.Seen) Seen.mark("parts", id, document.getElementById("v-parts"));
   selected=id;
   svgCut.querySelectorAll(".part").forEach(p=>p.classList.toggle("sel",p.dataset.id===id));
   const o=P[id]; if(!o) return;
@@ -50,7 +51,7 @@ function renderAlarms(){
   const q=document.getElementById("q").value.trim().toLowerCase();
   let n=0;
   alist.innerHTML=A.filter(a=>(pf==="all"||a.p===pf)&&(!q||(a.n+a.th+a.u.join()+a.t.join()+(a.r?P[a.r].th:"")).toLowerCase().includes(q))).map(a=>{n++;
-    return `<details class="alarm" id="al-${a.id}"${openAlarm===a.id?" open":""}><summary><span class="pri ${a.p}">${priTh[a.p]}</span><span class="t">${esc(a.n)}<small>${esc(a.th)}</small></span></summary>
+    return `<details class="alarm" id="al-${a.id}" data-seen="repair|${a.id}"${openAlarm===a.id?" open":""}><summary><span class="pri ${a.p}">${priTh[a.p]}</span><span class="t">${esc(a.n)}<small>${esc(a.th)}</small></span></summary>
     <div class="body">
       ${a.u.length?`<h4>สาเหตุจากการใช้งานหรือการประกอบ</h4><ul>${li(a.u)}</ul>`:""}
       ${a.t.length?`<h4>สาเหตุทางเทคนิค</h4><ul>${li(a.t)}</ul>`:""}

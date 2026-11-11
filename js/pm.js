@@ -152,7 +152,7 @@
     const t=D.find(x=>x.id===cur);
     root.innerHTML=`<h1>โมดูล 6 · การทดสอบหลังซ่อม</h1>
       <p class="muted">ทุกงานซ่อมต้องจบด้วยการทดสอบที่ตรงกับสิ่งที่ซ่อม ก่อนส่งเครื่องกลับไปใช้กับผู้ป่วย เลือกหัวข้อการทดสอบ อ่านวิธีและเกณฑ์ แล้วฝึกตัดสินผลทางขวา (ฝึกได้ไม่จำกัด ไม่นับคะแนนผ่าน) จากนั้นไปแท็บ “ลำดับขั้นตอนงาน”</p>
-      <div class="chips pmtabs">${D.map(x=>`<button data-id="${x.id}" class="${x.id===cur?"on":""}">${esc(x.n)}</button>`).join("")}</div>
+      <div class="chips pmtabs">${D.map(x=>`<button data-id="${x.id}" data-seen="test|${x.id}" class="${x.id===cur?"on":""}">${esc(x.n)}</button>`).join("")}</div>
       <div class="pmgrid">
         <div>
           <h2>${esc(t.th)}</h2><p>${esc(t.why)}</p>
@@ -166,6 +166,7 @@
         <aside class="logbox"><h2>ฝึกตัดสินผล</h2><div id="pm-pr"></div></aside>
       </div>
       ${form()}`;
+    if(window.Seen) Seen.mark("test", cur, root);
     root.querySelectorAll(".pmtabs button").forEach(b=>b.onclick=()=>{cur=b.dataset.id;render();});
     bindCalc(cur); bindForm(); practice(cur);
   }

@@ -4,7 +4,8 @@
      v   = ชื่อหน้าที่ใช้ใน #nav (วิชาซ่อม) หรือรหัสบทเรียน (วิชาคลินิก)
      final/after = หน้าที่เปิดได้เมื่อผ่านครบทุกโมดูล · done = {href, t} ปุ่มไปต่อหลังผ่านโมดูลสุดท้าย · lessonMode = วิชาคลินิก (โมดูลคือบทเรียนในหน้าเดียว)
    กติกา: โมดูลถัดไปเปิดเมื่อสอบท้ายโมดูลก่อนหน้าได้อย่างน้อย pass/take (โมดูลใดกำหนด pass ของตัวเอง เช่น ด่านความปลอดภัย pass:5 ใช้ค่านั้นแทน) · สุ่ม take ข้อจากคลังทุกครั้ง · สอบซ้ำได้ไม่จำกัด
-   โหมดดูตัวอย่าง (?preview) ไม่ล็อก เพื่อให้ผู้สอนตรวจเนื้อหาได้ทุกหน้า */
+   โหมดดูตัวอย่าง (?preview) ไม่ล็อก เพื่อให้ผู้สอนตรวจเนื้อหาได้ทุกหน้า
+   ต้องเปิดดูเนื้อหาครบทุกหัวข้อก่อนเริ่มสอบ: ใช้ js/seen.js (Seen.define(<id โมดูล>, …)) ถ้าโมดูลไม่ได้กำหนดหัวข้อไว้ เริ่มสอบได้ทันที */
 (function(){
   const Q=window.MQUIZ; if(!Q||!Q.mods||!Q.mods.length) return;
   const take=Q.take||5, need=Q.pass||4, label=Q.label||"โมดูล";
@@ -70,6 +71,8 @@
     const i=idx(id), next=Q.mods[i+1], b=best(id), ok=passed(id);
     const head=`<div class="mq-h"><b>📝 สอบท้าย${label}: ${esc(M.n)}</b><span class="${ok?"ok":""}">${ok?`✓ ผ่านแล้ว (ดีที่สุด ${b}/${take})`:b?`ดีที่สุด ${b}/${take} · ยังไม่ผ่าน`:`ยังไม่ได้สอบ`}</span></div>`;
     if(!S.qs){
+      const sn=window.Seen?Seen.status(id):{ok:true};
+      if(!sn.ok){ el.innerHTML=head+Seen.gateHTML(id); return; }
       el.innerHTML=head+`<p class="small muted">สุ่ม ${take} ข้อจากคลัง ${M.qs.length} ข้อ ต้องได้อย่างน้อย ${needOf(id)} ข้อ${needOf(id)>=take?" (ถูกทุกข้อ)":""}จึงผ่าน${next?` และเปิด${label}ถัดไป`:""} สอบซ้ำได้ไม่จำกัด แต่ละรอบได้ข้อไม่เหมือนกัน</p>
         <div class="tools"><button class="primary mq-go">${b?"สอบอีกครั้ง":"เริ่มสอบ"}</button>${ok&&next?`<a class="btn" href="${nextHref(next)}">ไป${label}ถัดไป →</a>`:""}</div>`;
       el.querySelector(".mq-go").onclick=()=>{ S.qs=shuffle(M.qs).slice(0,take).map(q=>({q,ord:shuffle(q.o.map((x,k)=>k))})); S.ans={}; S.res=null; render(el); };
@@ -108,6 +111,9 @@
   }
   /* วาดกล่องสอบทุกกล่องที่อยู่ใน root */
   function mount(root){ (root||document).querySelectorAll(".mq[data-mq]").forEach(el=>{ if(!el.dataset.on){ el.dataset.on=1; } render(el); }); }
+  /* ดูหัวข้อครบแล้ว: วาดกล่องสอบของโมดูลนั้นใหม่ (ถ้ายังไม่ได้เริ่มสอบ) */
+  document.addEventListener("seen-change", e=>{ const sc=e.detail&&e.detail.scope;
+    document.querySelectorAll(".mq[data-mq]").forEach(el=>{ if(el.dataset.mq===sc && !(state[sc]&&state[sc].qs)) render(el); }); });
 
   window.MGate={ locked, guard, decorate, mount, boxHTML, passed, frontier, lockMsg, toast, mods:Q.mods, label };
 })();
